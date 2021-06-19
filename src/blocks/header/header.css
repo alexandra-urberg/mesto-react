@@ -1,0 +1,24 @@
+.header {
+    display: flex;
+    margin: 0 auto;
+    
+    border-bottom: 1px solid rgba(84, 84, 84, 0.7);
+}
+
+@media screen and (min-width: 1110px) {
+    .header {
+        width: 880px;
+    }
+} 
+
+@media screen and (min-width: 401px) and (max-width: 1109px) {
+    .header {
+        width: 80%;
+    }
+}
+
+@media screen and (min-width: 320px) and (max-width: 400px) {
+    .header {
+        width: 100%;
+    }
+}

@@ -1,0 +1,15 @@
+.popup__form-container {
+    display: grid;
+    grid-template-rows: fit-content(388px);
+    row-gap: 30px;
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0 auto;
+    color: #000;
+}
+
+@media screen and (min-width: 320px) and (max-width: 500px) {
+    .popup__form-container {
+        grid-template-rows: fit-content(238px);
+    }
+}
