@@ -2,8 +2,8 @@
     /**max-width: 880px;**/
     display: flex;
     flex-direction: column;
-
-    padding: 45px 0 60px 0;
+    margin: 0 auto;
+    min-height: 100vh;
     background-color: #000;
     font-family: 'Inter', Arial, sans-serif;
     color: #fff;
