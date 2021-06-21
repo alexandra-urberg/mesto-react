@@ -14,7 +14,7 @@ const PopupWithForm = (props) => {
           onClick={props.onClose}
         ></button>
         <h2 className="popup__title">{props.title}</h2>
-        <form className="popup__form-container" id="popup__form" noValidate>
+        <form className="popup__form-container">
           {props.children}
           <button type="submit" className="popup__save-button">
             {props.btn}
