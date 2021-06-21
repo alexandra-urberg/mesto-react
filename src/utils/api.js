@@ -14,7 +14,7 @@ class Api {
     }
 
     getPersonalInformation() { //метод для вытаскивания информации с сервера о user/users
-        return fetch('https://mesto.nomoreparties.co/v1/cohort-24/users/me', {
+        return fetch(`${this._url}/users/me`, {
             method: 'GET',
             headers: this._headers
         })
@@ -22,7 +22,7 @@ class Api {
     }
 
     editPersonalProfile(data) { // метод для измения инфомуции о user и сохранении его на сервере
-        return fetch('https://mesto.nomoreparties.co/v1/cohort-24/users/me', {
+        return fetch(`${this._url}/users/me`, {
             method: 'PATCH',
             headers: this._headers,
             body: JSON.stringify({
@@ -34,7 +34,7 @@ class Api {
     }
 
     editAvatar(link) { // метод для измения avatar оf user и сохранении его на сервере
-        return fetch('https://mesto.nomoreparties.co/v1/cohort-24/users/me/avatar', {
+        return fetch(`${this._url}/users/me/avatar`, {
             method: 'PATCH',
             headers: this._headers,
             body: JSON.stringify({
@@ -45,7 +45,7 @@ class Api {
     }
 
     getInitialCards() { //метод достаюзий все карточки с фотографиями из сервера 
-        return fetch('https://mesto.nomoreparties.co/v1/cohort-24/cards', {
+        return fetch(`${this._url}/cards`, {
             method: 'GET',
             headers: this._headers
         })
@@ -53,7 +53,7 @@ class Api {
     }
 
     addNewCard(data) { // метод добаляющий новую карточку на сервер 
-        return fetch ('https://mesto.nomoreparties.co/v1/cohort-24/cards', {
+        return fetch (`${this._url}/cards`, {
             method: 'POST',
             headers: this._headers,
             body: JSON.stringify({
