@@ -3,7 +3,7 @@ import React from 'react';
 const ImagePopup = ({card, onClose, handleCloseByOverlay}) => {
     return (
         <div  
-        onClick={handleCloseByOverlay} className={`popup popup-opacity ${card.isOpen && card.link ? "popup_is-opened" : null}`}>
+        onClick={handleCloseByOverlay} className={`popup popup-opacity ${card.isOpen && card.link !== '' ? "popup_is-opened" : null}`}>
         <div className="popup__image-container">
             <button className="popup__close-button" onClick={onClose} type="button"></button>
             <img className="image" src={card.link} alt={card.name} />
