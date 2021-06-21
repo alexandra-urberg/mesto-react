@@ -11,7 +11,7 @@ const App = () => {
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);//popup AddCards
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);// popup Edit Avatar
   const [isDeletePopupImage, setIsDeletePopupImage] = useState(false);// popup Delete Card
-  const [selectedCard, setSelectedCard] = useState(false);// получаем полноразмерную картинку с подписью
+  const [selectedCard, setSelectedCard] = useState({name: '', link: ''});// получаем полноразмерную картинку с подписью
   /** const [isLoading, setIsLoading] = useState(false);**/
 
   //обработчики открытий попааов
@@ -45,7 +45,7 @@ const App = () => {
     setIsEditProfilePopupOpen(false);
     setIsAddPlacePopupOpen(false);
     setIsDeletePopupImage(false);
-    setSelectedCard(false);
+    setSelectedCard({name: '', link: ''});
   };
 
   useEffect(() => {//обработчик закрытия попапов по нажатия на ESC
