@@ -1,6 +1,9 @@
-import { useEffect, useState } from "react";
-import api from "../utils/api.js";
+import { useContext } from "react";
+import { useState, useEffect } from "react";
 import Card from "./Card.js";
+import api from "../utils/api.js";
+import { CurrentUserContext } from '../contexts/CurrentUserContext.js';
+
 
 const Main = ({
   onEditAvatar,
@@ -9,28 +12,25 @@ const Main = ({
   onDeleteCard,
   onCardClick,
 }) => {
-  const [userName, setUserName] = useState("");//сюда будет записываться имя пользователя
-  const [userDescription, setUserDescription] = useState("");//сюда будет записываться  информация о пользователе
-  const [userAvatar, setUserAvatar] = useState("");//сюда будет записываться  информация об аватаре
-  const [cards, setCards] = useState([]);//сюда будет записываться  информация о карточках
+  const { name, about, avatar } = useContext(CurrentUserContext);//сюда будет записываться имя пользователя
 
-  useEffect(() => {//вытаскиваем информацию о пользователе и карточках 
-    Promise.all([api.getPersonalInformation(), api.getInitialCards()])
-      .then(([{ name, about, avatar }, cardData]) => {
-        setUserName(name);
-        setUserDescription(about);
-        setUserAvatar(avatar);
-        setCards([...cardData]);
-      })
-      .catch((error) => console.log(error));
+  const [cards, setCards] = useState([]);
+
+  useEffect(() => {//вытаскиваем информацию о пользователе 
+    api.getInitialCards()
+    .then((cardData) => {
+      setCards(cardData)
+    })
+    .catch((error) => console.log(error));
   }, []);
+
 
   return (
     <main className="main">
       <section className="profile main__profile">
         <div
           className="profile__avatar-container profile__avatar"
-          style={{ backgroundImage: `url(${userAvatar})` }}
+          style={{ backgroundImage: `url(${avatar})` }}
         >
           <button
             onClick={onEditAvatar}
@@ -39,13 +39,13 @@ const Main = ({
           ></button>
         </div>
         <div className="profile__conteiner">
-          <h1 className="profile__name">{userName}</h1>
+          <h1 className="profile__name">{name}</h1>
           <button
             onClick={onEditProfile}
             className="profile__open-button"
             type="button"
           ></button>
-          <p className="profile__job">{userDescription}</p>
+          <p className="profile__job">{about}</p>
         </div>
         <button
           id="popup-image__open-button"
