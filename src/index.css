@@ -18,6 +18,7 @@
 @import url(./blocks/elements/__container/elements__container.css);
 @import url(./blocks/element/element.css);
 @import url(./blocks/element/__trash/element__trash.css);
+@import url(./blocks/element/__trash/_visible/element__trash_visible.css);
 @import url(./blocks/element/__image/element__image.css);
 @import url(./blocks/element/__block/element__block.css);
 @import url(./blocks/element/__quote/element__quote.css);
