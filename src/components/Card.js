@@ -18,19 +18,21 @@ const Card = ({
     `element__trash ${isOwn ? "element__trash_visible" : ""}`;
 
   const isLiked = likes.some((i) => i._id === currentUserId); // Определяем, есть ли у карточки лайк, поставленный текущим пользователем
-  const cardLikeButtonClassName = `element__button-like ${ // Создаём переменную, которую после зададим в `className` для кнопки лайка
+  const cardLikeButtonClassName = `element__button-like ${// Создаём переменную, которую после зададим в `className` для кнопки лайка
     isLiked ? "element__button-like_active" : ""
-  }`; 
+  }`;
 
-  const handleCardClick = () => { //обработчик передающий информауию от card в ImagePopup для открытия полноразмерной картинки
+  const handleCardClick = () => {//обработчик передающий информауию от card в Main для открытия полноразмерной картинки
     onCardClick({ name, link });
   };
-  const hadleLikeClick = () => {
+
+  const hadleLikeClick = () => {//обработчик передающий информауию от card в Main для постановки лайк
     onCardLike(likes, cardId, currentUserId);
   };
-  const handleDeleteClick = () => {
+
+  const handleDeleteClick = () => {//обработчик передающий информауию от card в Main для удаления карточки
     onCardDelete(cardId);
-  }
+  };
 
   return (
     <li className="element template__card">
@@ -61,4 +63,5 @@ const Card = ({
 };
 
 export default Card;
+
 
