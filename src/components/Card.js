@@ -7,7 +7,7 @@ const Card = ({
   likes,
   owner,
   cardId,
-  onDeleteCard,
+  onCardDelete,
   onCardClick,
   onCardLike,
 }) => {
@@ -28,12 +28,15 @@ const Card = ({
   const hadleLikeClick = () => {
     onCardLike(likes, cardId, currentUserId);
   };
+  const handleDeleteClick = () => {
+    onCardDelete(cardId);
+  }
 
   return (
     <li className="element template__card">
       <button
+        onClick={handleDeleteClick}
         className={cardDeleteButtonClassName}
-        onClick={onDeleteCard}
         type="button"
       ></button>
       <img
