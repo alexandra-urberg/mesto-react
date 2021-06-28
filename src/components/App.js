@@ -8,6 +8,7 @@ import PopupWithForm from "./PopupWithForm";
 import ImagePopup from "./ImagePopup";
 import { CurrentUserContext } from "../contexts/CurrentUserContext.js";
 import EditProfilePopup from "./EditProfilePopup";
+import EditAvatarPopup from "./EditAvatarPopup";
 
 const App = () => {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false); //popup Profile
@@ -27,7 +28,7 @@ const App = () => {
       .catch((error) => console.log(error));
   }, []);
 
-  const handleUpdateUser = (userInformation) => {//обработчик отвечающий за сохранение введенной информации о пользователе на сервер
+  const handleUpdateUser = (userInformation) => {// внешний обработчик отвечающий за сохранение введенной информации о пользователе на сервер
     api
       .editPersonalProfile(userInformation)
       .then((userData) => {
@@ -36,6 +37,16 @@ const App = () => {
       .catch((error) => console.log(error))
       .finally(() => closeAllPopups());
   };
+
+  const handleUpdateAvatar = (link) => {// внешний обработчик отвечающий за сохранение аватара пользователя на сервер
+    api
+      .editAvatar(link)
+      .then((userData) => {
+        setCurrentUser(userData)
+      })
+      .catch((error) => console.log(error))
+      .finally(() => closeAllPopups());
+  }
 
   //обработчики открытий попааов
   const handleEditAvatarClick = () => {
@@ -115,6 +126,12 @@ const App = () => {
             onClose={closeAllPopups}
             handleCloseByOverlay={handleCloseByOverlay}
           />
+          <EditAvatarPopup
+            isOpen={isEditAvatarPopupOpen}
+            onUpdateAvatar={handleUpdateAvatar}
+            onClose={closeAllPopups}
+            handleCloseByOverlay={handleCloseByOverlay}
+          />
           <PopupWithForm
             isOpen={isAddPlacePopupOpen}
             onClose={closeAllPopups}
@@ -144,25 +161,6 @@ const App = () => {
                 required
               />
               <span className="popup__input-img-error input-error"></span>
-            </label>
-          </PopupWithForm>
-          <PopupWithForm
-            isOpen={isEditAvatarPopupOpen}
-            onClose={closeAllPopups}
-            handleCloseByOverlay={handleCloseByOverlay}
-            name="avatar"
-            title="Обновить аватар"
-            btn="Сохранить"
-          >
-            <label className="popup__label">
-              <input
-                type="url"
-                name="avatar"
-                className="popup__input"
-                placeholder="Ссылка на фотографию"
-                required
-              />
-              <span className="input-avatar-error input-error"></span>
             </label>
           </PopupWithForm>
           <PopupWithForm
