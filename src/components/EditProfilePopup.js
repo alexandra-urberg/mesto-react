@@ -7,22 +7,18 @@ const EditProfilePopup = (props) => {
   const [about, setAbout] = useState(""); // Стейт, в котором содержится значение инпута about
   const currentUser = useContext(CurrentUserContext); // Подписка на контекст
 
-  function handleChangeName(e) {
-    // Обработчик изменения инпута name обновляет стейт
+  function handleChangeName(e) {//Обработчик изменения инпута name обновляет стейт
     setName(e.target.value);
   }
 
-  function handleChangeAbout(e) {
-    // Обработчик изменения инпута about обновляет стейт
+  function handleChangeAbout(e) {//Обработчик изменения инпута about обновляет стейт
     setAbout(e.target.value);
   }
   //debugger;
   function handleSubmit(e) {
-    // Запрещаем браузеру переходить по адресу формы
-    e.preventDefault();
+    e.preventDefault();//Запрещаем браузеру переходить по адресу формы
 
-    props.onUpdateUser({
-      // Передаём значения управляемых компонентов во внешний обработчик
+    props.onUpdateUser({//Передаём значения управляемых компонентов во внешний обработчик
       name,
       about,
     });
