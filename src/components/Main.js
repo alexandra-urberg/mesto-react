@@ -2,8 +2,7 @@ import { useContext } from "react";
 import { useState, useEffect } from "react";
 import Card from "./Card.js";
 import api from "../utils/api.js";
-import { CurrentUserContext } from '../contexts/CurrentUserContext.js';
-
+import { CurrentUserContext } from "../contexts/CurrentUserContext.js";
 
 const Main = ({
   onEditAvatar,
@@ -12,18 +11,42 @@ const Main = ({
   onDeleteCard,
   onCardClick,
 }) => {
-  const { name, about, avatar } = useContext(CurrentUserContext);//сюда будет записываться имя пользователя
+  const { avatar, name, about } = useContext(CurrentUserContext); //сюда будет записываться имя пользователя
 
-  const [cards, setCards] = useState([]);
+  const [cards, setCards] = useState([]); //подписываемся на CurrentUserContext, чтобы получить нужное значания контекста
 
-  useEffect(() => {//вытаскиваем информацию о пользователе 
-    api.getInitialCards()
-    .then((cardData) => {
-      setCards(cardData)
-    })
-    .catch((error) => console.log(error));
+  useEffect(() => {//вытаскиваем информацию о пользователе
+    api
+      .getInitialCards()
+      .then((cardData) => {
+        setCards(cardData);
+      })
+      .catch((error) => console.log(error));
   }, []);
 
+  function handleCardLike(likes, cardId, currentUserId) { // Снова проверяем, есть ли уже лайк на этой карточке
+    const isLiked = likes.some((card) => card._id === currentUserId);
+    //я не поняла как делать обзщий запрос на сервер для двух методов в api
+    if (isLiked) {//удаляем Лайк
+      api
+        .deleteLike(cardId)
+        .then((newCard) => {
+          setCards((state) =>
+            state.map((c) => (c._id === cardId ? newCard : c))
+          );
+        })
+        .catch((error) => console.log(error));
+    } else { //добавляем лайк
+      api
+        .addLike(cardId)
+        .then((newCard) => {
+          setCards((state) =>
+            state.map((c) => (c._id === cardId ? newCard : c))
+          );
+        })
+        .catch((error) => console.log(error));
+    }
+  }
 
   return (
     <main className="main">
@@ -60,12 +83,14 @@ const Main = ({
             return (
               <Card
                 likes={likes}
-                key={_id}
+                cardId={_id}
                 name={name}
                 link={link}
                 owner={owner}
+                key={`${owner}.${_id}`}
                 onDeleteCard={onDeleteCard}
                 onCardClick={onCardClick}
+                onCardLike={handleCardLike}
               />
             );
           })}
@@ -76,4 +101,5 @@ const Main = ({
 };
 
 export default Main;
+
 
