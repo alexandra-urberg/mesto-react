@@ -4,11 +4,12 @@ import api from "../utils/api.js";
 import Header from "./Header";
 import Main from "./Main";
 import Footer from "./Footer";
-import PopupWithForm from "./PopupWithForm";
 import ImagePopup from "./ImagePopup";
 import { CurrentUserContext } from "../contexts/CurrentUserContext.js";
 import EditProfilePopup from "./EditProfilePopup";
 import EditAvatarPopup from "./EditAvatarPopup";
+import AddPlacePopup from "./AddPlacePopup";
+import DeleteCardPopup from "./DeleteCardPopup";
 
 const App = () => {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false); //popup Profile
@@ -16,36 +17,92 @@ const App = () => {
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false); // popup Edit Avatar
   const [isDeletePopupImage, setIsDeletePopupImage] = useState(false); // popup Delete Card
   const [selectedCard, setSelectedCard] = useState({ name: "", link: "" }); // получаем полноразмерную картинку с подписью
-  /** const [isLoading, setIsLoading] = useState(false);**/
+  const [isLoading, setIsLoading] = useState(false)
   const [currentUser, setCurrentUser] = useState({});
+  const [cards, setCards] = useState([]); //подписываемся на CurrentUserContext, чтобы получить нужное значания контекста
+  const [cardId, setCardId] = useState([]);
 
   useEffect(() => { //вытаскиваем информацию о пользователе
-    api
-      .getPersonalInformation()
-      .then((userData) => {
+    setIsLoading(true);
+    Promise.all([api.getPersonalInformation(), api.getInitialCards()])
+      .then(([userData, cardData]) => {
         setCurrentUser(userData);
-      })
-      .catch((error) => console.log(error));
-  }, []);
-
-  const handleUpdateUser = (userInformation) => {// внешний обработчик отвечающий за сохранение введенной информации о пользователе на сервер
-    api
-      .editPersonalProfile(userInformation)
-      .then((userData) => {
-        setCurrentUser(userData);
+        setCards(cardData);
       })
       .catch((error) => console.log(error))
-      .finally(() => closeAllPopups());
+      .finally(() => setIsLoading(false));
+  }, []);
+
+
+  const handleUpdateUser = (userInformation) => {// внешний обработчик отвечающий за сохранение введенной информации о пользователе на сервер
+    setIsLoading(true);
+    api
+    .editPersonalProfile(userInformation)
+      .then((userData) => {
+        setCurrentUser(userData);
+      })
+      .then(() => closeAllPopups())
+      .catch((error) => console.log(error))
+      .finally(() => setIsLoading(false));
   };
 
   const handleUpdateAvatar = (link) => {// внешний обработчик отвечающий за сохранение аватара пользователя на сервер
+    setIsLoading(true);
     api
-      .editAvatar(link)
+    .editAvatar(link)
       .then((userData) => {
         setCurrentUser(userData)
       })
+      .then(() => closeAllPopups())
       .catch((error) => console.log(error))
-      .finally(() => closeAllPopups());
+      .finally(() => setIsLoading(false));
+  }
+
+  const handleAddPlaceSubmit = (card) => {
+    setIsLoading(true);
+    api
+      .addNewCard(card)
+      .then((newCard) => {
+        setCards([newCard, ...cards])
+      })
+      .then(() => closeAllPopups())
+      .catch((error) => console.log(error))
+      .finally(() => setIsLoading(false));
+  }
+
+  const handleCardLike = (likes, cardId, currentUserId) => {// внешний обработчик отвечающий за постановку/удаление лайка на/с сервер/а
+    const isLiked = likes.some((card) => card._id === currentUserId);// Снова проверяем, есть ли уже лайк на этой карточке
+    //я не поняла как делать обзщий запрос на сервер для двух методов в api
+    if (isLiked) {//удаляем Лайк
+      api
+        .deleteLike(cardId)
+        .then((newCard) => {
+          setCards((cards) =>
+            cards.map((c) => (c._id === cardId ? newCard : c))
+          );
+        })
+        .catch((error) => console.log(error));
+    } else { //добавляем лайк
+      api
+        .addLike(cardId)
+        .then((newCard) => {
+          setCards((state) =>
+            state.map((c) => (c._id === cardId ? newCard : c))
+          );
+        })
+        .catch((error) => console.log(error));
+    }
+  }
+
+  const handleCardDelete = () => {// внешний обработчик отвечающий за удаление карточки с сервера
+    setIsLoading(true);
+    api.deleteCard(cardId._id)
+    .then(() => {
+      setCards((state) => state.filter((c) => c._id === cardId._id));
+    })
+    .then(() => closeAllPopups())
+    .catch((error) => console.log(error))
+    .finally(() => setIsLoading(false));
   }
 
   //обработчики открытий попааов
@@ -61,11 +118,12 @@ const App = () => {
     setIsAddPlacePopupOpen(true);
   };
 
-  const handleDeleteCard = () => {
+  const handleDeleteCard = (card) => {
+    setCardId(card);
     setIsDeletePopupImage(true);
   };
 
-  const handleCardClick = ({ link, name, isOpen }) => {
+  const handleCardClick = ({ link, name }) => {
     setSelectedCard({
       isOpen: true,
       link,
@@ -82,40 +140,20 @@ const App = () => {
     setSelectedCard({ name: "", link: "" });
   };
 
-  useEffect(() => {//обработчик закрытия попапов по нажатия на ESC
-    const handleEscClose = (event) => {
-      if (event.key === "Escape") {
-        closeAllPopups();
-      }
-    };
-
-    document.addEventListener("keydown", handleEscClose);
-
-    return () => {
-      document.removeEventListener("keydown", handleEscClose);
-    };
-  });
-
-  const handleCloseByOverlay = (evt) => { //рбработчик для закртия popup по кнопке и overlay
-    if (
-      evt.target.classList.contains("popup_is-opened") ||
-      evt.target.classList.contains("popup__close-button")
-    ) {
-      closeAllPopups();
-    }
-  };
-
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
         <>
           <Header />
           <Main
+            cards={cards}
             onEditProfile={handleEditProfileClick}
             onAddPlace={handleAddPlaceClick}
             onEditAvatar={handleEditAvatarClick}
-            onDeleteCard={handleDeleteCard}
             onCardClick={handleCardClick}
+            onDeleteCard={handleDeleteCard} 
+            onCardLike={handleCardLike}
+            isLoading={isLoading}
           />
           <Footer />
         </>
@@ -124,62 +162,34 @@ const App = () => {
             isOpen={isEditProfilePopupOpen}
             onUpdateUser={handleUpdateUser}
             onClose={closeAllPopups}
-            handleCloseByOverlay={handleCloseByOverlay}
+            isLoading={isLoading}
           />
           <EditAvatarPopup
             isOpen={isEditAvatarPopupOpen}
             onUpdateAvatar={handleUpdateAvatar}
             onClose={closeAllPopups}
-            handleCloseByOverlay={handleCloseByOverlay}
+            isLoading={isLoading}
           />
-          <PopupWithForm
+          <AddPlacePopup 
             isOpen={isAddPlacePopupOpen}
+            onAddPlace={handleAddPlaceSubmit}
             onClose={closeAllPopups}
-            handleCloseByOverlay={handleCloseByOverlay}
-            name="image"
-            title="Новое место"
-            btn="Создать"
-          >
-            <label className="popup__label">
-              <input
-                type="text"
-                minLength="2"
-                maxLength="30"
-                name="name"
-                className="popup__input"
-                placeholder="Название"
-                required
-              />
-              <span className="popup__input-title-error input-error"></span>
-            </label>
-            <label className="popup__label">
-              <input
-                type="url"
-                name="link"
-                className="popup__input"
-                placeholder="Ссылка на картинку"
-                required
-              />
-              <span className="popup__input-img-error input-error"></span>
-            </label>
-          </PopupWithForm>
-          <PopupWithForm
+            isLoading={isLoading}
+          />
+          <DeleteCardPopup
             isOpen={isDeletePopupImage}
+            onDeleteCard={handleCardDelete}
             onClose={closeAllPopups}
-            handleCloseByOverlay={handleCloseByOverlay}
-            name="card-delete"
-            title="Вы уверены?"
-            btn="Да"
+            isLoading={isLoading}
+          />
+          <ImagePopup
+            card={selectedCard}
+            onClose={closeAllPopups}
           />
         </>
-        <ImagePopup
-          card={selectedCard}
-          onClose={closeAllPopups}
-          handleCloseByOverlay={handleCloseByOverlay}
-        />
       </div>
     </CurrentUserContext.Provider>
-  );
-};
+  )
+}
 
 export default App;

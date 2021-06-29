@@ -1,60 +1,19 @@
 import { useContext } from "react";
-import { useState, useEffect } from "react";
 import Card from "./Card.js";
-import api from "../utils/api.js";
 import { CurrentUserContext } from "../contexts/CurrentUserContext.js";
 
 const Main = ({
+  cards,
   onEditAvatar,
   onEditProfile,
   onAddPlace,
   onDeleteCard,
   onCardClick,
+  onCardLike,
+  onCardDelete, 
+  isLoading,
 }) => {
   const { avatar, name, about } = useContext(CurrentUserContext); //сюда будет записываться имя пользователя
-
-  const [cards, setCards] = useState([]); //подписываемся на CurrentUserContext, чтобы получить нужное значания контекста
-
-  useEffect(() => {//вытаскиваем информацию о пользователе
-    api
-      .getInitialCards()
-      .then((cardData) => {
-        setCards(cardData);
-      })
-      .catch((error) => console.log(error));
-  }, []);
-
-  function handleCardLike(likes, cardId, currentUserId) { // Снова проверяем, есть ли уже лайк на этой карточке
-    const isLiked = likes.some((card) => card._id === currentUserId);
-    //я не поняла как делать обзщий запрос на сервер для двух методов в api
-    if (isLiked) {//удаляем Лайк
-      api
-        .deleteLike(cardId)
-        .then((newCard) => {
-          setCards((state) =>
-            state.map((c) => (c._id === cardId ? newCard : c))
-          );
-        })
-        .catch((error) => console.log(error));
-    } else { //добавляем лайк
-      api
-        .addLike(cardId)
-        .then((newCard) => {
-          setCards((state) =>
-            state.map((c) => (c._id === cardId ? newCard : c))
-          );
-        })
-        .catch((error) => console.log(error));
-    }
-  }
-
-  function handleCardDelete(cardId) {
-    api.deleteCard(cardId)
-    .then(() => {
-      setCards((state) => state.filter((c) => c._id === cardId));
-    })
-    .catch((error) => console.log(error));
-  }
 
   return (
     <main className="main">
@@ -87,6 +46,7 @@ const Main = ({
       </section>
       <section id="elements" className="elements">
         <ul id="template__container" className="elements__container">
+          {isLoading && (<p>Is Loading ...</p>)}
           {cards.map(({ likes, _id, name, link, owner }) => {
             return (
               <Card
@@ -98,8 +58,8 @@ const Main = ({
                 key={`${owner}.${_id}`}
                 onDeleteCard={onDeleteCard}
                 onCardClick={onCardClick}
-                onCardLike={handleCardLike}
-                onCardDelete={handleCardDelete}
+                onCardLike={onCardLike}
+                onCardDelete={onCardDelete}
               />
             );
           })}

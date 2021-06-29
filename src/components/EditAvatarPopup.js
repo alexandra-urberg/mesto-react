@@ -10,17 +10,15 @@ const EditAvatarPopup = (props) => {
         props.onUpdateAvatar(//Передаём значения во внешний обработчик для измения аватара
           avatarRef.current.value
         );
-    } 
+    }
 
     return (
         <PopupWithForm
             isOpen={props.isOpen}
             onClose={props.onClose}
-            handleCloseByOverlay={props.handleCloseByOverlay}
             onSubmit={handleSubmit}
             name="avatar"
             title="Обновить аватар"
-            btn="Сохранить"
         >
             <label className="popup__label">
                 <input
@@ -33,6 +31,9 @@ const EditAvatarPopup = (props) => {
                 />
                 <span className="input-avatar-error input-error"></span>
             </label>
+            <button type="submit" className="popup__save-button">
+                {props.isLoading ? 'Сохранение...' : 'Сохранить'}
+            </button>
         </PopupWithForm>
     )
 }

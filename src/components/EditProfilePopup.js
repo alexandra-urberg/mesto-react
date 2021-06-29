@@ -38,12 +38,10 @@ const EditProfilePopup = (props) => {
     <PopupWithForm
       isOpen={props.isOpen}
       onClose={props.onClose}
-      handleCloseByOverlay={props.handleCloseByOverlay}
       onSubmit={handleSubmit}
       onClick={handleClear}
       name="profile"
       title="Редактировать профиль"
-      btn="Сохранить"
     >
       <label className="popup__label">
         <input
@@ -73,6 +71,9 @@ const EditProfilePopup = (props) => {
         />
         <span className="input-job-error input-error"></span>
       </label>
+      <button type="submit" className="popup__save-button">
+        {props.isLoading ? 'Сохранение...' : 'Сохранить'}
+      </button>
     </PopupWithForm>
   );
 };

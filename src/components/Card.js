@@ -7,7 +7,7 @@ const Card = ({
   likes,
   owner,
   cardId,
-  onCardDelete,
+  onDeleteCard,
   onCardClick,
   onCardLike,
 }) => {
@@ -30,14 +30,14 @@ const Card = ({
     onCardLike(likes, cardId, currentUserId);
   };
 
-  const handleDeleteClick = () => {//обработчик передающий информауию от card в Main для удаления карточки
-    onCardDelete(cardId);
-  };
+  const handleDelete = (card) => {
+    onDeleteCard(card);
+  }
 
   return (
     <li className="element template__card">
-      <button
-        onClick={handleDeleteClick}
+      <button 
+        onClick={handleDelete}
         className={cardDeleteButtonClassName}
         type="button"
       ></button>
