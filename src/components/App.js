@@ -140,6 +140,31 @@ const App = () => {
     setSelectedCard({ name: "", link: "" });
   };
 
+  useEffect(() => {//обработчик закрытия попапов по нажатия на ESC
+    const handleEscClose = (event) => {
+      if (event.key === "Escape") {
+        closeAllPopups();
+      }
+    }
+
+    const handleCloseByOverlay = (evt) => { //рбработчик для закртия popup по кнопке и overlay
+      if (
+        evt.target.classList.contains("popup_is-opened") ||
+        evt.target.classList.contains("popup__close-button")
+      ) {
+        closeAllPopups();
+      }
+    }
+    
+    document.addEventListener('click', handleCloseByOverlay);
+    document.addEventListener("keydown", handleEscClose);
+
+    return () => {
+      document.removeEventListener('click', handleCloseByOverlay);
+      document.removeEventListener("keydown", handleEscClose);
+    }
+  });
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">

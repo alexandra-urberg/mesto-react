@@ -13,7 +13,7 @@ class Api {
         return Promise.reject('We have found an error.' `Error: ${res.status}`);
     }
 
-    getPersonalInformation() { //метод для вытаскивания информации с сервера о user/users
+    getPersonalInformation() { //запрашиваем информацию с сервера о user/users
         return fetch(`${this._url}/users/me`, {
             method: 'GET',
             headers: this._headers
@@ -21,7 +21,7 @@ class Api {
         .then(this._handleResponse);
     }
 
-    editPersonalProfile(data) { // метод для измения инфомуции о user и сохранении его на сервере
+    editPersonalProfile(data) { // запрагиваем  измение инфомуции о user и сохранении его на сервере
         return fetch(`${this._url}/users/me`, {
             method: 'PATCH',
             headers: this._headers,
@@ -33,7 +33,7 @@ class Api {
         .then(this._handleResponse);
     }
 
-    editAvatar(link) { // метод для измения avatar оf user и сохранении его на сервере
+    editAvatar(link) { //запрашиваем изменить avatar оf user и сохраненить его на сервере
         return fetch(`${this._url}/users/me/avatar`, {
             method: 'PATCH',
             headers: this._headers,
@@ -44,7 +44,7 @@ class Api {
         .then(this._handleResponse);
     }
 
-    getInitialCards() { //метод достаюзий все карточки с фотографиями из сервера 
+    getInitialCards() { //запрашиваем все карточки с фотографиями из сервера 
         return fetch(`${this._url}/cards`, {
             method: 'GET',
             headers: this._headers
@@ -52,7 +52,7 @@ class Api {
         .then(this._handleResponse);
     }
 
-    addNewCard(data) { // метод добаляющий новую карточку на сервер 
+    addNewCard(data) { // запрашиваем добавить новую карточку на сервер 
         return fetch (`${this._url}/cards`, {
             method: 'POST',
             headers: this._headers,
@@ -64,7 +64,7 @@ class Api {
         .then(this._handleResponse);
     }
 
-    addLike(id) { // метод постановки лайка
+    addLike(id) { // запрашиваем постановить лайк
         return fetch(`${this._url}/cards/likes/${id}`, {
             method: 'PUT',
             headers: this._headers
@@ -72,15 +72,15 @@ class Api {
         .then(this._handleResponse);
     }
 
-    deleteLike(id) { // метод удаления лайка 
+    deleteLike(id) { // запрашиваем удалить лайка 
         return fetch(`${this._url}/cards/likes/${id}`, {
-            method: 'DELETE',
-            headers: this._headers
+           method: 'DELETE',
+           headers: this._headers
         })
         .then(this._handleResponse);
     }
 
-    deleteCard(id) { // метод уделения карточки с сервера
+    deleteCard(id) { // запрашиваем уделить карточку с сервера
         return fetch(`${this._url}/cards/${id}`, {
             method: 'DELETE',
             headers: this._headers

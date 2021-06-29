@@ -1,6 +1,6 @@
 import React from 'react';
 
-const ImagePopup = ({card, onClose, handleCloseByOverlay}) => {
+const ImagePopup = ({card, onClose}) => {
     return (
         <div  
          className={`popup popup-opacity ${card.isOpen && card.link !== '' ? "popup_is-opened" : null}`}>
