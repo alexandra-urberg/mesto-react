@@ -3,12 +3,12 @@ import PopupWithForm from './PopupWithForm';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
 const AddPlacePopup = (props) => {
-    const [name, setName] = useState("");
+    const [description , setDescription] = useState("");
     const [link, setLink] = useState("");
     const currentUser = useContext(CurrentUserContext);
 
-    function handleChangeName(e) {//Обработчик изменения инпута name обновляет стейт
-        setName(e.target.value);
+    function handleChangeDescription(e) {//Обработчик изменения инпута name обновляет стейт
+        setDescription(e.target.value);
     }
 
     function handleChangeLink(e) {//Обработчик изменения инпута name обновляет стейт
@@ -18,18 +18,18 @@ const AddPlacePopup = (props) => {
     function handleSubmit(e) {
         e.preventDefault();//Запрещаем браузеру переходить по адресу формы
         props.onAddPlace({//Передаём значения управляемых компонентов во внешний обработчик
-          name,
+          name: description,
           link,
         });
     }
     
-    function handleClear() {//очищаем инпуты после закрытия на крестик
-        setName("");
+    function handleClear() {
+        setDescription("");
         setLink("");
     }
 
     useEffect(() => {// После загрузки текущего пользователя из API его данные будут использованы в управляемых компонентах.
-        setName(currentUser.name);
+        setDescription(currentUser.description);
         setLink(currentUser.link);
       }, [currentUser]);
 
@@ -52,8 +52,8 @@ const AddPlacePopup = (props) => {
                 className="popup__input"
                 placeholder="Название"
                 required
-                value={name || ""}
-                onChange={handleChangeName}
+                value={description || ""}
+                onChange={handleChangeDescription}
               />
               <span className="popup__input-title-error input-error"></span>
             </label>

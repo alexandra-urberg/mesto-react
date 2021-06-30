@@ -3,35 +3,35 @@ import PopupWithForm from "./PopupWithForm";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
 
 const EditProfilePopup = (props) => {
-  const [name, setName] = useState(""); // Стейт, в котором содержится значение инпута name
-  const [about, setAbout] = useState(""); // Стейт, в котором содержится значение инпута about
+  const [tittle, setTitle] = useState(""); // Стейт, в котором содержится значение инпута name
+  const [narrative, setNarrative] = useState(""); // Стейт, в котором содержится значение инпута about
   const currentUser = useContext(CurrentUserContext); // Подписка на контекст
 
-  function handleChangeName(e) {//Обработчик изменения инпута name обновляет стейт
-    setName(e.target.value);
+  function handleChangeTitle(e) {//Обработчик изменения инпута name обновляет стейт
+    setTitle(e.target.value);
   }
 
-  function handleChangeAbout(e) {//Обработчик изменения инпута about обновляет стейт
-    setAbout(e.target.value);
+  function handleChangeNarrative(e) {//Обработчик изменения инпута about обновляет стейт
+    setNarrative(e.target.value);
   }
   //debugger;
   function handleSubmit(e) {
     e.preventDefault();//Запрещаем браузеру переходить по адресу формы
 
     props.onUpdateUser({//Передаём значения управляемых компонентов во внешний обработчик
-      name,
-      about,
+      name: tittle,
+      about: narrative,
     });
   }
 
   function handleClear() {//очищаем инпуты после закрытия на крестик
-    setName("");
-    setAbout("");
+    setTitle("");
+    setNarrative("");
   }
 
   useEffect(() => {// После загрузки текущего пользователя из API его данные будут использованы в управляемых компонентах.
-    setName(currentUser.name);
-    setAbout(currentUser.about);
+    setTitle(currentUser.tittle);
+    setNarrative(currentUser.narrative);
   }, [currentUser]);
 
   return (
@@ -52,8 +52,8 @@ const EditProfilePopup = (props) => {
           className="popup__input"
           placeholder="Жак-Ив Кусто"
           required
-          value={name || ""}
-          onChange={handleChangeName}
+          value={tittle || ""}
+          onChange={handleChangeTitle}
         />
         <span className="input-name-error input-error"></span>
       </label>
@@ -66,8 +66,8 @@ const EditProfilePopup = (props) => {
           className="popup__input"
           placeholder="Исследователь океана"
           required
-          value={about || ""}
-          onChange={handleChangeAbout}
+          value={narrative || ""}
+          onChange={handleChangeNarrative}
         />
         <span className="input-job-error input-error"></span>
       </label>
