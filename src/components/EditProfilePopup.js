@@ -24,12 +24,12 @@ const EditProfilePopup = (props) => {
     });
   }
 
-  function handleClear() {
+  function handleClear() {//очищаем инпуты после закрытия на крестик
     setName("");
     setAbout("");
   }
 
-  useEffect(() => {
+  useEffect(() => {// После загрузки текущего пользователя из API его данные будут использованы в управляемых компонентах.
     setName(currentUser.name);
     setAbout(currentUser.about);
   }, [currentUser]);

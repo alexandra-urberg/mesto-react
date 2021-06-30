@@ -23,12 +23,12 @@ const AddPlacePopup = (props) => {
         });
     }
     
-    function handleClear() {
+    function handleClear() {//очищаем инпуты после закрытия на крестик
         setName("");
         setLink("");
     }
 
-    useEffect(() => {
+    useEffect(() => {// После загрузки текущего пользователя из API его данные будут использованы в управляемых компонентах.
         setName(currentUser.name);
         setLink(currentUser.link);
       }, [currentUser]);
@@ -74,7 +74,6 @@ const AddPlacePopup = (props) => {
             </button>
           </PopupWithForm>
     )
-
 }
 
 export default AddPlacePopup;

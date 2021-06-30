@@ -58,7 +58,7 @@ const App = () => {
       .finally(() => setIsLoading(false));
   }
 
-  const handleAddPlaceSubmit = (card) => {
+  const handleAddPlaceSubmit = (card) => {// внешний обработчик отвечающий за добавление новой карточки на сервер
     setIsLoading(true);
     api
       .addNewCard(card)
@@ -72,6 +72,7 @@ const App = () => {
 
   const handleCardLike = (likes, cardId, currentUserId) => {// внешний обработчик отвечающий за постановку/удаление лайка на/с сервер/а
     const isLiked = likes.some((card) => card._id === currentUserId);// Снова проверяем, есть ли уже лайк на этой карточке
+
     //я не поняла как делать обзщий запрос на сервер для двух методов в api
     if (isLiked) {//удаляем Лайк
       api
@@ -124,14 +125,14 @@ const App = () => {
     setSelectedCard({ name: "", link: "" });
   };
 
-  useEffect(() => {//обработчик закрытия попапов по нажатия на ESC
+  useEffect(() => {//обработчик закрытия попапов по нажатия на ESC и overlay
     const handleEscClose = (event) => {
       if (event.key === "Escape") {
         closeAllPopups();
       }
     }
 
-    const handleCloseByOverlay = (evt) => { //рбработчик для закртия popup по кнопке и overlay
+    const handleCloseByOverlay = (evt) => { //обработчик для закртия popup по кнопке и overlay
       if (
         evt.target.classList.contains("popup_is-opened") ||
         evt.target.classList.contains("popup__close-button")

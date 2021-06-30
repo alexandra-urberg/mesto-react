@@ -17,7 +17,7 @@ const Card = ({
     const cardDeleteButtonClassName = // Создаём переменную, которую после зададим в `className` для кнопки удаления
     `element__trash ${isOwn ? "element__trash_visible" : ""}`;
     
-    const handleRemoveCard = () => {
+    const handleRemoveCard = () => {//обработчик передающий информауию от card в Main для открытия popup delete card, а также передает всю нужную информацию в App для удаления карточки
         onDeleteCard({
             likes,
             cardId,
@@ -39,7 +39,7 @@ const Card = ({
     const hadleLikeClick = () => {//обработчик передающий информауию от card в Main для постановки лайк
         onCardLike(likes, cardId, currentUserId);
     };
-    
+
     return (
         <li className="element template__card">
             <button  
