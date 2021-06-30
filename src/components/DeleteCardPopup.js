@@ -4,14 +4,12 @@ import PopupWithForm from './PopupWithForm';
 const DeleteCardPopup = (props) => {
     function handleDelete(e) {
         e.preventDefault();//Запрещаем браузеру переходить по адресу формы
-        debugger;
-        props.onDeleteCard();//Передаём значения управляемых компонентов во внешний обработчик);
+        props.onCardDelete();//Передаём значения управляемых компонентов во внешний обработчик);
     } 
 
     return (
         <PopupWithForm
         isOpen={props.isOpen}
-        debbuger
         onSubmit={handleDelete}
         onClose={props.onClose}
         name="card-delete"
