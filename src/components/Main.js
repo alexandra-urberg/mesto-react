@@ -10,7 +10,6 @@ const Main = ({
   onDeleteCard,
   onCardClick,
   onCardLike,
-  onCardDelete, 
   isLoading,
 }) => {
   const { avatar, name, about } = useContext(CurrentUserContext); //сюда будет записываться имя пользователя
@@ -59,9 +58,8 @@ const Main = ({
                 onDeleteCard={onDeleteCard}
                 onCardClick={onCardClick}
                 onCardLike={onCardLike}
-                onCardDelete={onCardDelete}
               />
-            );
+            )
           })}
         </ul>
       </section>

@@ -20,7 +20,7 @@ const App = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [currentUser, setCurrentUser] = useState({});
   const [cards, setCards] = useState([]); //подписываемся на CurrentUserContext, чтобы получить нужное значания контекста
-  const [cardId, setCardId] = useState([]);
+  const [removeCard, setRemoveCard] = useState([]);
 
   useEffect(() => { //вытаскиваем информацию о пользователе
     setIsLoading(true);
@@ -94,17 +94,6 @@ const App = () => {
     }
   }
 
-  const handleCardDelete = () => {// внешний обработчик отвечающий за удаление карточки с сервера
-    setIsLoading(true);
-    api.deleteCard(cardId._id)
-    .then(() => {
-      setCards((state) => state.filter((c) => c._id === cardId._id));
-    })
-    .then(() => closeAllPopups())
-    .catch((error) => console.log(error))
-    .finally(() => setIsLoading(false));
-  }
-
   //обработчики открытий попааов
   const handleEditAvatarClick = () => {
     setIsEditAvatarPopupOpen(true);
@@ -116,11 +105,6 @@ const App = () => {
 
   const handleAddPlaceClick = () => {
     setIsAddPlacePopupOpen(true);
-  };
-
-  const handleDeleteCard = (card) => {
-    setCardId(card);
-    setIsDeletePopupImage(true);
   };
 
   const handleCardClick = ({ link, name }) => {
@@ -165,6 +149,22 @@ const App = () => {
     }
   });
 
+  const handleDeleteCard = (card) => {
+    setRemoveCard(card);
+    setIsDeletePopupImage(true);
+  };
+  
+  const handleCardDelete = () => {// внешний обработчик отвечающий за удаление карточки с сервера
+    setIsLoading(true);
+    api.deleteCard(removeCard.cardId)
+    .then(() => {
+      setCards((cards) => cards.filter((c) => c._id === removeCard.cardId));
+    })
+    .then(() => closeAllPopups())
+    .catch((error) => console.log(error))
+    .finally(() => setIsLoading(false));
+  }
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
@@ -203,7 +203,7 @@ const App = () => {
           />
           <DeleteCardPopup
             isOpen={isDeletePopupImage}
-            onDeleteCard={handleCardDelete}
+            onCardDelete={handleCardDelete}
             onClose={closeAllPopups}
             isLoading={isLoading}
           />
