@@ -1,11 +1,11 @@
-import { useRef } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import PopupWithForm from './PopupWithForm';
 
 ///Подскажите, пожалуйста, как тут надо сделать валидацию. Огромное спасибо!!!
 
 const EditAvatarPopup = (props) => {
     const avatarRef = useRef(); // записываем объект, возвращаемый хуком, в переменную
-    //const [validationErrors, setValidationErrors] = useState({avatar: ''});//стейт валидации инпутов
+    const [validationErrors, setValidationErrors] = useState({avatar: ''});//стейт валидации инпутов
 
     function handleSubmit(e) {
         e.preventDefault();
@@ -15,19 +15,19 @@ const EditAvatarPopup = (props) => {
         );
     }
     
-    //function handleChangeAvatar(e) {
-        //const { value } = e.target;
-        //let errors = validationErrors;
+    function handleChangeAvatar(e) {
+        const { value } = e.target;
+        let errors = validationErrors;
 
-        //const spx = /^(https?|chrome):\/\/[^\s$.?#].[^\s]*$/gm;
+        const spx = /^(https?|chrome):\/\/[^\s$.?#].[^\s]*$/gm;
     
-        //!spx.test(value) ? errors = 'Введите URL.' : errors = '' && setValidationErrors(errors);
-    //}
+        !spx.test(value) ? errors = 'Введите URL.' : errors = '' && setValidationErrors(errors);
+    }
 
-    //useEffect(() => {
-        //avatar.current.value = '';
-        //setValidationErrors('');
-    //}, [props.isOpen]);
+    useEffect(() => {
+        avatar.current.value = '';
+        setValidationErrors('');
+    }, [props.isOpen]);
 
 
     return (
@@ -37,7 +37,7 @@ const EditAvatarPopup = (props) => {
             onSubmit={handleSubmit}
             name="avatar"
             title="Обновить аватар"
-            //disabled={validationErrors.avatar}
+            disabled={validationErrors}
             btn={props.isLoading ? 'Сохранение...' : 'Сохранить'}
         >
             <label className="popup__label">
@@ -47,14 +47,13 @@ const EditAvatarPopup = (props) => {
                     name="avatar"
                     className="popup__input"
                     placeholder="Ссылка на фотографию"
-                    //onChange={handleChangeAvatar}
+                    onChange={handleChangeAvatar}
                     required
                 />
-                <span ></span>
+                <span className={`${validationErrors.avatar ? "popup__input-error" : null}`}>{validationErrors}</span>
             </label>
         </PopupWithForm>
     )
 }
-////className={`${validationErrors.avatar ? "popup__input-error" : null}`}>//{validationErrors.avatar} //, useState, useEffect
 
 export default EditAvatarPopup;
