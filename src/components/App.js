@@ -20,7 +20,7 @@ const App = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [currentUser, setCurrentUser] = useState({});
   const [cards, setCards] = useState([]); //подписываемся на CurrentUserContext, чтобы получить нужное значания контекста
-  const [removeCard, setRemoveCard] = useState([]);
+  const [removeCard, setRemoveCard] = useState({});
 
   useEffect(() => { //вытаскиваем информацию о пользователе
     setIsLoading(true);
@@ -148,7 +148,7 @@ const App = () => {
       document.removeEventListener('click', handleCloseByOverlay);
       document.removeEventListener("keydown", handleEscClose);
     }
-  });
+  }, []);
 
   const handleDeleteCard = (card) => {
     setRemoveCard(card);
@@ -159,7 +159,7 @@ const App = () => {
     setIsLoading(true);
     api.deleteCard(removeCard.cardId)
     .then(() => {
-      setCards((cards) => cards.filter((c) => c._id === removeCard.cardId));
+      setCards((cards) => cards.filter((c) => c._id !== removeCard.cardId));
     })
     .then(() => closeAllPopups())
     .catch((error) => console.log(error))
