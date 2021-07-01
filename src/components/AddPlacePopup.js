@@ -1,18 +1,28 @@
 import { useState, useContext, useEffect } from 'react';
 import PopupWithForm from './PopupWithForm';
-import { CurrentUserContext } from '../contexts/CurrentUserContext';
+import { CurrentUserContext } from "../contexts/CurrentUserContext";
 
 const AddPlacePopup = (props) => {
-    const [description , setDescription] = useState("");
-    const [link, setLink] = useState("");
-    const currentUser = useContext(CurrentUserContext);
+    const [description , setDescription] = useState('');
+    const [link, setLink] = useState('');
+    const currentUser = useContext(CurrentUserContext); // Подписка на контекст
+    const [validationErrors, setValidationErrors] = useState({description: '', link: ''})//стейт валидации инпутов
 
-    function handleChangeDescription(e) {//Обработчик изменения инпута name обновляет стейт
-        setDescription(e.target.value);
+    function handleChangeDescription(e) {//Обработчик изменения инпута name обновляет стейт 
+      const { value } = e.target;
+      let errors = validationErrors;
+      setDescription(value);
+
+      value.length < 2 ? errors.description = 'Минимальное колличество символоа - 2': errors.description = '' && setValidationErrors(errors);// проверяем на минимальное колличество символов
     }
 
     function handleChangeLink(e) {//Обработчик изменения инпута name обновляет стейт
-        setLink(e.target.value);
+      const { value } = e.target;
+      let errors = validationErrors;
+      setLink(value);
+      const regex = /^(https?|chrome):\/\/[^\s$.?#].[^\s]*$/gm;
+
+      !regex.test(value) ? errors.link = 'Введите URL.' : errors.link = '' && setValidationErrors(errors);
     }
 
     function handleSubmit(e) {
@@ -22,26 +32,22 @@ const AddPlacePopup = (props) => {
           link,
         });
     }
-    
-    function handleClear() {
-        setDescription("");
-        setLink("");
-    }
 
     useEffect(() => {// После загрузки текущего пользователя из API его данные будут использованы в управляемых компонентах.
-        setDescription(currentUser.description);
-        setLink(currentUser.link);
-      }, [currentUser]);
+      setDescription(currentUser.description);
+      setLink(currentUser.link);
+      setValidationErrors({description: '', link: ''});//и проверяться на валидность
+    }, [currentUser, props.isOpen]);
 
     return (
         <PopupWithForm
             isOpen={props.isOpen}
             onClose={props.onClose}
             onSubmit={handleSubmit}
-            onClick={handleClear}
             name="image"
             title="Новое место"
-            btn="Создать"
+            disabled={(validationErrors.description || validationErrors.link ) || (description === currentUser.description || link === currentUser.link)}
+            btn={props.isLoading ? 'Сохранение...' : 'Создать'}
           >
             <label className="popup__label">
               <input
@@ -55,7 +61,7 @@ const AddPlacePopup = (props) => {
                 value={description || ""}
                 onChange={handleChangeDescription}
               />
-              <span className="popup__input-title-error input-error"></span>
+              <span className={`${validationErrors.description ? "popup__input-error" : null}`}>{validationErrors.description}</span>
             </label>
             <label className="popup__label">
               <input
@@ -67,11 +73,8 @@ const AddPlacePopup = (props) => {
                 value={link || ""}
                 onChange={handleChangeLink}
               />
-              <span className="popup__input-img-error input-error"></span>
+              <span className={`${validationErrors.link ? "popup__input-error" : null}`}>{validationErrors.link}</span>
             </label>
-            <button type="submit" className="popup__save-button">
-            {props.isLoading ? 'Сохранение...' : 'Создать'}
-            </button>
           </PopupWithForm>
     )
 }

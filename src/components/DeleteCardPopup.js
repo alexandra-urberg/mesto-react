@@ -14,10 +14,8 @@ const DeleteCardPopup = (props) => {
         onClose={props.onClose}
         name="card-delete"
         title="Вы уверены?"
+        btn={props.isLoading ? 'Удаляем...' : 'Да'}
         >
-            <button type="submit" className="popup__save-button">
-                {props.isLoading ? 'Удаляем...' : 'Да'}
-            </button>
         </PopupWithForm>
     )
 }
