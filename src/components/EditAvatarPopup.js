@@ -4,8 +4,8 @@ import PopupWithForm from './PopupWithForm';
 ///Подскажите, пожалуйста, как тут надо сделать валидацию. Огромное спасибо!!!
 
 const EditAvatarPopup = (props) => {
-    const avatarRef = useRef(); // записываем объект, возвращаемый хуком, в переменную
-    const [validationErrors, setValidationErrors] = useState({avatar: ''});//стейт валидации инпутов
+    const avatarRef = useRef(''); // записываем объект, возвращаемый хуком, в переменную
+    const [validationErrors, setValidationErrors] = useState('');//стейт валидации инпутов
 
     function handleSubmit(e) {
         e.preventDefault();
@@ -21,7 +21,11 @@ const EditAvatarPopup = (props) => {
 
         const spx = /^(https?|chrome):\/\/[^\s$.?#].[^\s]*$/gm;
     
-        !spx.test(value) ? errors = 'Введите URL.' : errors = '' && setValidationErrors(errors);
+        if(!spx.test(value)) { 
+            errors = 'Введите URL.';
+        } else {
+            errors = '' && setValidationErrors(errors);
+        }
     }
 
     useEffect(() => {
@@ -50,7 +54,7 @@ const EditAvatarPopup = (props) => {
                     onChange={handleChangeAvatar}
                     required
                 />
-                <span className={`${validationErrors.avatar ? "popup__input-error" : null}`}>{validationErrors}</span>
+                <span className={`${validationErrors ? "popup__input-error" : null}`}>{validationErrors}</span>
             </label>
         </PopupWithForm>
     )
