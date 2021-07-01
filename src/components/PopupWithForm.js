@@ -5,13 +5,12 @@ const PopupWithForm = (props) => {
     <div
       id={`popup-${props.name}`}
       className={`popup ${props.isOpen ? "popup_is-opened" : null}`}
-      onClick={props.handleCloseByOverlay}
     >
       <div className="popup__content">
         <button
           className="popup__close-button"
           type="button"
-          onClick={(props.onClose, props.onClick)}
+          onClick={props.onClose}
         ></button>
         <h2 className="popup__title">{props.title}</h2>
         <form
@@ -20,6 +19,12 @@ const PopupWithForm = (props) => {
           onSubmit={props.onSubmit}
         >
           {props.children}
+          <button type="submit" 
+            className={`popup__save-button ${props.disabled ? "popup__button_disabled" : null}`} 
+            disabled={props.disabled}
+           >
+            {props.btn}
+          </button>
         </form>
       </div>
     </div>
