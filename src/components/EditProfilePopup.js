@@ -35,8 +35,8 @@ const EditProfilePopup = (props) => {
   }
 
   useEffect(() => {// После загрузки текущего пользователя из API его данные будут использованы в управляемых компонентах.
-    setName('');
-    setAbout(''); 
+    setName(currentUser.name);
+    setAbout(currentUser.about); 
     setValidationErrors({name: '', about: ''});//и проверяться на валидность
   }, [currentUser, props.isOpen]);
 
