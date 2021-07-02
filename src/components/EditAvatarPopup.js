@@ -6,6 +6,7 @@ import PopupWithForm from './PopupWithForm';
 const EditAvatarPopup = (props) => {
     const avatarRef = useRef(''); // записываем объект, возвращаемый хуком, в переменную
     const [validationErrors, setValidationErrors] = useState('');//стейт валидации инпутов
+    const [value, setValue] = useState(''); //стейт для значения инпута
 
     function handleSubmit(e) {
         e.preventDefault();
@@ -14,25 +15,20 @@ const EditAvatarPopup = (props) => {
           avatarRef.current.value
         );
     }
-    
-    function handleChangeAvatar(e) {
-        const { value } = e.target;
-        let errors = validationErrors;
 
-        const spx = /^(https?|chrome):\/\/[^\s$.?#].[^\s]*$/gm;
-    
-        if(!spx.test(value)) { 
-            errors = 'Введите URL.';
-        } else {
-            errors = '' && setValidationErrors(errors);
-        }
+    function handleChange(e) {
+        const input = e.target;
+        const {value, validity} = input;
+        let error = validationErrors;
+        setValue(value);
+
+        validity.typeMismatch ? error = 'Введите URL.' : error = '' && setValidationErrors(error);
     }
 
     useEffect(() => {
-        avatar.current.value = '';
+        setValue('');
         setValidationErrors('');
     }, [props.isOpen]);
-
 
     return (
         <PopupWithForm
@@ -41,17 +37,19 @@ const EditAvatarPopup = (props) => {
             onSubmit={handleSubmit}
             name="avatar"
             title="Обновить аватар"
-            disabled={validationErrors}
+            disabled={validationErrors || !avatarRef.current.value }
             btn={props.isLoading ? 'Сохранение...' : 'Сохранить'}
         >
             <label className="popup__label">
                 <input
                     ref={avatarRef}
+                    value={value}
                     type="url"
                     name="avatar"
                     className="popup__input"
                     placeholder="Ссылка на фотографию"
-                    onChange={handleChangeAvatar}
+                    onChange={handleChange}
+                    pattern= "/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i"
                     required
                 />
                 <span className={`${validationErrors ? "popup__input-error" : null}`}>{validationErrors}</span>

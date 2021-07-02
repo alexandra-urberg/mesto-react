@@ -3,41 +3,41 @@ import PopupWithForm from "./PopupWithForm";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
 
 const EditProfilePopup = (props) => {
-  const [tittle, setTitle] = useState(""); // Стейт, в котором содержится значение инпута name
-  const [narrative, setNarrative] = useState(""); // Стейт, в котором содержится значение инпута about
-  const [validationErrors, setValidationErrors] = useState({tittle: '', narrative: ''})//стейт валидации инпутов
+  const [name, setName] = useState(""); // Стейт, в котором содержится значение инпута name
+  const [about, setAbout] = useState(""); // Стейт, в котором содержится значение инпута about
+  const [validationErrors, setValidationErrors] = useState({name: '', about: ''})//стейт валидации инпутов
   const currentUser = useContext(CurrentUserContext); // Подписка на контекст
   
 
   function handleChangeTitle(e) {//Обработчик изменения инпута name обновляет стейт
     const { value } = e.target;
     let errors = validationErrors;
-    setTitle(value);
+    setName(value);
 
-    value.length < 2 ? errors.tittle = 'Минимальное колличество символоа - 2': errors.tittle = '' && setValidationErrors(errors);// проверяем на минимальное колличество символов
+    value.length < 2 ? errors.name = 'Минимальное колличество символоа - 2': errors.name = '' && setValidationErrors(errors);// проверяем на минимальное колличество символов
   }
 
-  function handleChangeNarrative(e) {//Обработчик изменения инпута about обновляет стейт
+  function handleChangeabout(e) {//Обработчик изменения инпута about обновляет стейт
     const { value } = e.target;
     let errors = validationErrors;
-    setNarrative(value);
+    setAbout(value);
 
-    value.length < 2 ? errors.narrative = 'Минимальное колличество символоа - 2': errors.narrative = '' && setValidationErrors(errors);// проверяем на минимальное колличество символов
+    value.length < 2 ? errors.about = 'Минимальное колличество символоа - 2': errors.about = '' && setValidationErrors(errors);// проверяем на минимальное колличество символов
   }
 
   function handleSubmit(e) {
     e.preventDefault();//Запрещаем браузеру переходить по адресу формы
 
     props.onUpdateUser({//Передаём значения управляемых компонентов во внешний обработчик
-      name: tittle,
-      about: narrative,
+      name: name,
+      about: about,
     });
   }
 
   useEffect(() => {// После загрузки текущего пользователя из API его данные будут использованы в управляемых компонентах.
-    setTitle(currentUser.tittle); 
-    setNarrative(currentUser.narrative); 
-    setValidationErrors({tittle: '', narrative: ''});//и проверяться на валидность
+    setName('');
+    setAbout(''); 
+    setValidationErrors({name: '', about: ''});//и проверяться на валидность
   }, [currentUser, props.isOpen]);
 
   return (
@@ -47,7 +47,7 @@ const EditProfilePopup = (props) => {
       onSubmit={handleSubmit}
       name="profile"
       title="Редактировать профиль"
-      disabled={(validationErrors.tittle || validationErrors.narrative ) || (tittle === currentUser.tittle || narrative === currentUser.narrative)}
+      disabled={validationErrors.name || validationErrors.about}
       btn={props.isLoading ? 'Сохранение...' : 'Сохранить'}
     >
       <label className="popup__label">
@@ -57,11 +57,11 @@ const EditProfilePopup = (props) => {
           className="popup__input"
           placeholder="Жак-Ив Кусто"
           required
-          value={tittle || ""}
+          value={name || ""}
           onChange={handleChangeTitle}
           onFocus={handleChangeTitle}
         />
-        <span className={`${validationErrors.tittle ? "popup__input-error" : null}`}>{validationErrors.tittle}</span>
+        <span className={`${validationErrors.name ? "popup__input-error" : null}`}>{validationErrors.name}</span>
       </label>
       <label className="popup__label">
         <input
@@ -70,11 +70,11 @@ const EditProfilePopup = (props) => {
           className="popup__input"
           placeholder="Исследователь океана"
           required
-          value={narrative || ""}
-          onChange={handleChangeNarrative}
-          onFocus={handleChangeNarrative}
+          value={about || ""}
+          onChange={handleChangeabout}
+          onFocus={handleChangeabout}
         />
-        <span className={`${validationErrors.narrative ? "popup__input-error" : null}`}>{validationErrors.narrative}</span>
+        <span className={`${validationErrors.about ? "popup__input-error" : null}`}>{validationErrors.about}</span>
       </label>
     </PopupWithForm>
   );

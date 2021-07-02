@@ -1,19 +1,17 @@
-import { useState, useContext, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import PopupWithForm from './PopupWithForm';
-import { CurrentUserContext } from "../contexts/CurrentUserContext";
 
 const AddPlacePopup = (props) => {
-    const [description , setDescription] = useState('');
+    const [name , setName] = useState('');
     const [link, setLink] = useState('');
-    const currentUser = useContext(CurrentUserContext); // Подписка на контекст
-    const [validationErrors, setValidationErrors] = useState({description: '', link: ''})//стейт валидации инпутов
+    const [validationErrors, setValidationErrors] = useState({name: '', link: ''})//стейт валидации инпутов
 
-    function handleChangeDescription(e) {//Обработчик изменения инпута name обновляет стейт 
+    function handleChangename(e) {//Обработчик изменения инпута name обновляет стейт 
       const { value } = e.target;
       let errors = validationErrors;
-      setDescription(value);
+      setName(value);
 
-      value.length < 2 ? errors.description = 'Минимальное колличество символоа - 2': errors.description = '' && setValidationErrors(errors);// проверяем на минимальное колличество символов
+      value.length < 2 ? errors.name = 'Минимальное колличество символоа - 2': errors.name = '' && setValidationErrors(errors);// проверяем на минимальное колличество символов
     }
 
     function handleChangeLink(e) {//Обработчик изменения инпута name обновляет стейт
@@ -26,18 +24,18 @@ const AddPlacePopup = (props) => {
     }
 
     function handleSubmit(e) {
-        e.preventDefault();//Запрещаем браузеру переходить по адресу формы
-        props.onAddPlace({//Передаём значения управляемых компонентов во внешний обработчик
-          name: description,
-          link,
-        });
+      e.preventDefault();//Запрещаем браузеру переходить по адресу формы
+      props.onAddPlace({//Передаём значения управляемых компонентов во внешний обработчик
+        name,
+        link,
+      });
     }
 
     useEffect(() => {// После загрузки текущего пользователя из API его данные будут использованы в управляемых компонентах.
-      setDescription(currentUser.description);
-      setLink(currentUser.link);
-      setValidationErrors({description: '', link: ''});//и проверяться на валидность
-    }, [currentUser, props.isOpen]);
+      setName('');
+      setLink('');
+      setValidationErrors({name: '', link: ''});//и проверяться на валидность
+    }, [props.isOpen]);
 
     return (
         <PopupWithForm
@@ -46,7 +44,7 @@ const AddPlacePopup = (props) => {
             onSubmit={handleSubmit}
             name="image"
             title="Новое место"
-            disabled={(validationErrors.description || validationErrors.link ) || (description === currentUser.description || link === currentUser.link)}
+            disabled={validationErrors.name || validationErrors.link}
             btn={props.isLoading ? 'Сохранение...' : 'Создать'}
           >
             <label className="popup__label">
@@ -58,10 +56,10 @@ const AddPlacePopup = (props) => {
                 className="popup__input"
                 placeholder="Название"
                 required
-                value={description || ""}
-                onChange={handleChangeDescription}
+                value={name || ""}
+                onChange={handleChangename}
               />
-              <span className={`${validationErrors.description ? "popup__input-error" : null}`}>{validationErrors.description}</span>
+              <span className={`${validationErrors.name ? "popup__input-error" : null}`}>{validationErrors.name}</span>
             </label>
             <label className="popup__label">
               <input
